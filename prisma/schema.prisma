@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Camera {
+  id        String      @id @default(cuid())
+  name      String
+  location  String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  incidents Incident[] 
+}
+
+model Incident {
+  id            String      @id @default(cuid())
+  type          String
+  tsStart       DateTime
+  tsEnd         DateTime?
+  thumbnailUrl  String?
+  resolved      Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  camera    Camera @relation(fields: [cameraId], references: [id])
+  cameraId  String
+}
