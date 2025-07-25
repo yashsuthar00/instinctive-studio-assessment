@@ -5,21 +5,17 @@ import TimelineRuler from "./components/TimelineRuler";
 
 export default function Home() {
   return (
-    <div className="font-sans min-h-screen h-screen overflow-hidden flex flex-col">
+    <div className="font-sans min-h-screen h-screen overflow-hidden flex flex-col w-screen max-w-none">
       <Navbar />
-      <div className="flex flex-1 flex-row gap-8 p-8 overflow-hidden">
-        <div className="flex-[0_0_60%] max-w-[60%] flex items-center justify-center h-full">
-          <IncidentPlayer />
-        </div>
-        <div className="flex-[0_0_40%] max-w-[40%] flex items-center justify-center h-full">
-          <IncidentList />
-        </div>
+      <div className="flex flex-1 flex-row gap-8 p-8 overflow-hidden w-full">
+      <div className="flex-[0_0_60%] max-w-[60%] flex items-center justify-center h-full">
+        <IncidentPlayer />
       </div>
-      <div className="flex items-center justify-center pb-4 overflow-x-auto w-full">
-        <div className="min-w-[900px]">
-          <TimelineRuler />
-        </div>
+      <div className="flex-[0_0_40%] max-w-[40%] flex items-center justify-center h-full">
+        <IncidentList />
       </div>
+      </div>
+      <TimelineRuler />
     </div>
   );
 }

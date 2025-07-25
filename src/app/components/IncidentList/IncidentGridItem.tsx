@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { AlertCircle, ShieldAlert, DoorOpen } from "lucide-react";
 
 interface IncidentGridItemProps {
   id: string;
@@ -82,8 +81,23 @@ function IncidentGridItem({
   );
 }
 
+function IncidentGridSkeleton() {
+  return (
+    <div className="flex items-center bg-[#222] rounded-lg p-1 shadow mb-3 min-h-[120px] w-full animate-pulse">
+      <div className="w-28 h-20 bg-gray-700 rounded-lg mr-3" />
+      <div className="flex-6 flex flex-col justify-between h-full w-full">
+        <span className="h-6 w-32 bg-gray-700 rounded mb-2" />
+        <span className="h-4 w-20 bg-gray-800 rounded mb-2" />
+        <span className="h-4 w-24 bg-gray-800 rounded" />
+      </div>
+      <div className="ml-3 px-3 py-2 rounded bg-gray-700 w-20 h-8" />
+    </div>
+  );
+}
+
 export default function IncidentGrid() {
   const [incidents, setIncidents] = useState<IncidentGridItemProps[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch("/api/incidents?resolved=false")
@@ -100,6 +114,7 @@ export default function IncidentGrid() {
             onResolve: () => handleResolve(incident.id),
           }))
         );
+        setLoading(false);
       });
   }, []);
 
@@ -119,7 +134,9 @@ export default function IncidentGrid() {
 
   return (
     <div className="w-full grid grid-cols-1 gap-3 overflow-y-auto" style={{ maxHeight: '100%' }}>
-      {incidents.length === 0 ? (
+      {loading ? (
+        Array.from({ length: 4 }).map((_, i) => <IncidentGridSkeleton key={i} />)
+      ) : incidents.length === 0 ? (
         <div className="text-gray-400 col-span-1">No incidents found</div>
       ) : (
         incidents.map((incident) => (
