@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Assessment - Instinctive Studio",
+  title: "MANDLACX - Instinctive Studio",
   description: "A Next.js application for the Instinctive Studio assessment",
 };
 
