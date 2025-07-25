@@ -38,9 +38,13 @@ function IncidentGridItem({
   dateTime,
   resolved,
   onResolve,
-}: IncidentGridItemProps) {
+  removing = false,
+}: IncidentGridItemProps & { removing?: boolean }) {
   return (
-    <div className="flex items-center bg-[#222] rounded-lg p-1 shadow mb-3 min-h-[120px] w-full">
+    <div
+      className={`flex items-center bg-[#222] rounded-lg p-1 shadow mb-3 min-h-[120px] w-full transition-all duration-500 ease-in-out ${removing ? 'opacity-0 scale-95 h-0 mb-0 p-0 overflow-hidden' : 'opacity-100 scale-100'}`}
+      style={{ pointerEvents: removing ? 'none' : undefined }}
+    >
       <img
         src={imageUrl}
         alt=""
@@ -97,6 +101,7 @@ function IncidentGridSkeleton() {
 
 export default function IncidentGrid() {
   const [incidents, setIncidents] = useState<IncidentGridItemProps[]>([]);
+  const [removingIds, setRemovingIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -119,16 +124,16 @@ export default function IncidentGrid() {
   }, []);
 
   function handleResolve(id: string) {
+    setRemovingIds((prev) => [...prev, id]);
     fetch(`/api/incidents/${id}/resolve`, {
       method: "PATCH",
     })
       .then((res) => res.json())
       .then((updated) => {
-        setIncidents((prev) =>
-          prev.map((item) =>
-            item.id === id ? { ...item, resolved: true } : item
-          )
-        );
+        setTimeout(() => {
+          setIncidents((prev) => prev.filter((item) => item.id !== id));
+          setRemovingIds((prev) => prev.filter((rid) => rid !== id));
+        }, 400); // match transition duration
       });
   }
 
@@ -140,7 +145,12 @@ export default function IncidentGrid() {
         <div className="text-gray-400 col-span-1">No incidents found</div>
       ) : (
         incidents.map((incident) => (
-          <IncidentGridItem key={incident.id} {...incident} />
+          <IncidentGridItem
+            key={incident.id}
+            {...incident}
+            removing={removingIds.includes(incident.id)}
+            onResolve={() => handleResolve(incident.id)}
+          />
         ))
       )}
     </div>
