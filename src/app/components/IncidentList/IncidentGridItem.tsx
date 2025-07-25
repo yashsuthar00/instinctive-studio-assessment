@@ -13,16 +13,22 @@ interface IncidentGridItemProps {
 }
 
 function getIncidentIcon(incidentName: string) {
+  let iconSrc = "/icons/default.svg";
   switch (incidentName.toLowerCase()) {
     case "suspicious activity":
-      return <AlertCircle className="w-6 h-6 text-yellow-400" />;
+      iconSrc = "./door-orange.svg";
+      break;
     case "gun threat":
-      return <ShieldAlert className="w-6 h-6 text-red-500" />;
+      iconSrc = "./gun.svg";
+      break;
     case "unauthorised access":
-      return <DoorOpen className="w-6 h-6 text-blue-500" />;
+      iconSrc = "./door-orange.svg";
+      break;
     default:
-      return <AlertCircle className="w-6 h-6 text-gray-400" />;
+      iconSrc = "./door.svg";
+      break;
   }
+  return <img src={iconSrc} alt={incidentName} className="w-6 h-6" />;
 }
 
 function IncidentGridItem({
