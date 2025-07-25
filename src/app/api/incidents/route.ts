@@ -11,6 +11,7 @@ export async function GET(request: NextRequest) {
   const incidents = await prisma.incident.findMany({
     where: { resolved: resolvedBool },
     orderBy: { tsStart: 'desc' },
+    include: { camera: true }, // Include camera relation
   });
   return Response.json(incidents);
 }
